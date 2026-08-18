@@ -1,10 +1,10 @@
 # Daily Fade backend — Laravel 13 / PHP 8.3, built for Render deployment
 FROM php:8.3-cli-bookworm
 
-# System deps + PHP extensions Laravel needs (pgsql for Supabase Postgres)
+# System deps + PHP extensions Laravel actually requires at runtime
 RUN apt-get update && apt-get install -y \
-    git unzip libpq-dev libzip-dev libonig-dev \
-    && docker-php-ext-install pdo pdo_pgsql pgsql zip bcmath \
+    git unzip libpq-dev libzip-dev libonig-dev libxml2-dev libcurl4-openssl-dev \
+    && docker-php-ext-install pdo pdo_pgsql pgsql zip bcmath mbstring xml dom curl fileinfo \
     && rm -rf /var/lib/apt/lists/*
 
 # Composer
