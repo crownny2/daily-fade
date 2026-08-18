@@ -23,15 +23,24 @@ class CustomerSeeder extends Seeder
             ['name' => 'Samantha Navarro', 'email' => 'samantha.navarro@example.test'],
         ];
 
-        foreach ($customers as $index => $data) {
-            User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'phone' => '+63 918 200 ' . str_pad((string) ($index + 1), 4, '0', STR_PAD_LEFT),
-                'password' => Hash::make('password'),
-                'role' => User::ROLE_CUSTOMER,
-                'email_verified_at' => now(),
-            ]);
+        $now = now();
+        $password = Hash::make('password');
+
+        foreach ($customers as $index => &$data) {
+            $data['phone'] = '+63 918 200 ' . str_pad((string) ($index + 1), 4, '0', STR_PAD_LEFT);
+            $data['password'] = $password;
+            $data['role'] = User::ROLE_CUSTOMER;
+            $data['email_verified_at'] = $now;
+            $data['created_at'] = $now;
+            $data['updated_at'] = $now;
         }
+        unset($data);
+
+        // ON CONFLICT (email) upsert — one query instead of 10 separate inserts.
+        User::upsert(
+            $customers,
+            ['email'],
+            ['name', 'phone', 'password', 'role', 'email_verified_at', 'updated_at']
+        );
     }
 }

@@ -9,6 +9,8 @@ class ServiceSeeder extends Seeder
 {
     public function run(): void
     {
+        $now = now();
+
         $services = [
             ['name' => 'Regular Haircut', 'description' => 'Classic haircut with clipper and scissor work.', 'duration_minutes' => 30, 'price' => 150],
             ['name' => 'Signature Haircut', 'description' => 'Precision haircut with styling and hot towel finish.', 'duration_minutes' => 45, 'price' => 250],
@@ -20,8 +22,15 @@ class ServiceSeeder extends Seeder
             ['name' => 'Combo: Haircut + Beard Trim', 'description' => 'Full grooming package: haircut and beard trim.', 'duration_minutes' => 50, 'price' => 220],
         ];
 
-        foreach ($services as $service) {
-            Service::create($service);
+        foreach ($services as &$service) {
+            $service['is_active'] = true;
+            $service['created_at'] = $now;
+            $service['updated_at'] = $now;
         }
+        unset($service);
+
+        // Safe to re-run: clear old rows, then insert everything in a single bulk query.
+        Service::query()->delete();
+        Service::insert($services);
     }
 }

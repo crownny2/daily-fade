@@ -21,33 +21,46 @@ class BarberSeeder extends Seeder
             ['name' => 'Aldrin Mendoza', 'email' => 'aldrin.mendoza@barbershop.test', 'specialty' => 'Hot Towel Shave'],
         ];
 
+        $now = now();
+
         foreach ($barbers as $index => $data) {
-            $user = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'phone' => '+63 917 100 ' . str_pad((string) ($index + 1), 4, '0', STR_PAD_LEFT),
-                'password' => Hash::make('password'),
-                'role' => User::ROLE_BARBER,
-                'email_verified_at' => now(),
-            ]);
+            $user = User::updateOrCreate(
+                ['email' => $data['email']],
+                [
+                    'name' => $data['name'],
+                    'phone' => '+63 917 100 ' . str_pad((string) ($index + 1), 4, '0', STR_PAD_LEFT),
+                    'password' => Hash::make('password'),
+                    'role' => User::ROLE_BARBER,
+                    'email_verified_at' => now(),
+                ]
+            );
 
-            $barber = Barber::create([
-                'user_id' => $user->id,
-                'specialty' => $data['specialty'],
-                'bio' => "Experienced barber specializing in {$data['specialty']}.",
-                'is_active' => true,
-            ]);
+            $barber = Barber::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'specialty' => $data['specialty'],
+                    'bio' => "Experienced barber specializing in {$data['specialty']}.",
+                    'is_active' => true,
+                ]
+            );
 
-            // Monday (1) through Saturday (6): 9:00 AM - 6:00 PM. Sunday off.
+            // Reset this barber's weekly schedule and insert it in one bulk query.
+            BarberSchedule::where('barber_id', $barber->id)->delete();
+
+            $schedules = [];
             for ($day = 1; $day <= 6; $day++) {
-                BarberSchedule::create([
+                $schedules[] = [
                     'barber_id' => $barber->id,
                     'day_of_week' => $day,
                     'start_time' => '09:00:00',
                     'end_time' => '18:00:00',
                     'is_available' => true,
-                ]);
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
             }
+
+            BarberSchedule::insert($schedules);
         }
     }
 }

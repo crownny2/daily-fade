@@ -12,10 +12,6 @@ use Illuminate\Database\Seeder;
 
 class AppointmentSeeder extends Seeder
 {
-    /**
-     * Call this from DatabaseSeeder::run() after users/barbers/services are seeded:
-     *   $this->call(AppointmentSeeder::class);
-     */
     public function run(): void
     {
         $customers = User::where('role', User::ROLE_CUSTOMER)->get();
@@ -28,8 +24,10 @@ class AppointmentSeeder extends Seeder
             return;
         }
 
-        // offsetDays: positive = past date, negative = future date.
-        // Different barber/time per entry so nothing overlaps.
+        // Safe to re-run: clear previously seeded demo appointments/payments first.
+        Payment::query()->delete();
+        Appointment::query()->delete();
+
         $plan = [
             ['status' => 'completed', 'offsetDays' => 3, 'time' => '10:00'],
             ['status' => 'completed', 'offsetDays' => 2, 'time' => '11:00'],
