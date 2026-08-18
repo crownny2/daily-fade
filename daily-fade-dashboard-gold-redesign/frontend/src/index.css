@@ -1,0 +1,242 @@
+@import "tailwindcss";
+
+@theme {
+  /* Palette — warm bone paper, near-black ink, champagne-gold accent. */
+  --color-canvas: #f4efe3;
+  --color-canvas-raised: #fffcf5;
+  --color-ink: #201b14;
+  --color-ink-soft: #57503f;
+  --color-ink-faint: #9b9280;
+  --color-line: #ddd2b8;
+  --color-accent: #b3873c;
+  --color-accent-dark: #8a6527;
+  --color-accent-soft: #f2e2bf;
+  --color-success: #3f6b4a;
+  --color-danger: #a3392f;
+
+  /* True-black + champagne-gold pairing reserved for the Daily Fade
+     "premium" surfaces (hero, footer, dark CTA bands). Kept separate from
+     --color-ink so the rest of the customer site's existing light surfaces
+     are unaffected. */
+  --color-noir: #0d0b08;
+  --color-noir-raised: #17140f;
+  --color-gold: #c9a34e;
+  --color-gold-bright: #e6c878;
+  --color-gold-soft: rgba(201, 163, 78, 0.14);
+  --color-bone: #f4efe3;
+  --color-bone-soft: rgba(244, 239, 227, 0.65);
+
+  --font-display: "Fraunces", "Georgia", serif;
+  --font-sans: "Work Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --shadow-card: 0 1px 2px rgba(32, 27, 20, 0.06), 0 8px 24px -12px rgba(32, 27, 20, 0.18);
+  --shadow-gold: 0 1px 2px rgba(13, 11, 8, 0.4), 0 16px 40px -16px rgba(201, 163, 78, 0.25);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background-color: var(--color-accent-soft);
+  color: var(--color-ink);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.hairline {
+  border-color: var(--color-line);
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes reveal-line {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.animate-reveal-line {
+  animation: reveal-line 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-origin: left;
+}
+
+/* Card shake feedback — used on login/register form errors. */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+.animate-shake {
+  animation: shake 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* ==========================================================================
+   DAILY FADE — premium noir/gold surface helpers (Phase 7E-1A landing redesign)
+   Used by the Hero, dark CTA bands, and footer. Scoped via these utility
+   classes rather than repointing the global tokens, so every other route
+   that shares PublicLayout keeps its existing light-surface styling.
+   ========================================================================== */
+
+.bg-noir-fade {
+  background:
+    radial-gradient(ellipse 90% 60% at 15% 0%, rgba(201, 163, 78, 0.14), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 100% 100%, rgba(201, 163, 78, 0.08), transparent 60%),
+    linear-gradient(180deg, var(--color-noir) 0%, #14110c 100%);
+}
+
+.text-gold-gradient {
+  background: linear-gradient(120deg, var(--color-gold-bright) 0%, var(--color-gold) 55%, var(--color-accent-dark) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.divider-gold {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-gold) 50%, transparent);
+}
+
+/* Faint diagonal razor-stripe texture — decorative, no imagery required. */
+.pattern-barber-stripes {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(201, 163, 78, 0.06) 0px,
+    rgba(201, 163, 78, 0.06) 1px,
+    transparent 1px,
+    transparent 14px
+  );
+}
+
+/* ==========================================================================
+   ADMIN PANEL (Phase 6A)
+   Fully isolated design tokens for the SaaS-style admin dashboard.
+   Scoped under .admin-shell so it never touches customer-site styling
+   above. Theme switches by toggling data-theme on the .admin-shell root;
+   components consume these via Tailwind arbitrary-value utilities,
+   e.g. bg-[var(--admin-bg)].
+   ========================================================================== */
+
+.admin-shell {
+  /* Daily Fade admin — light mode keeps the same gold identity on a bone surface */
+  --admin-bg: #f5f4f1;
+  --admin-surface: #ffffff;
+  --admin-surface-alt: #f8f6f2;
+  --admin-border: #e6e1d6;
+  --admin-text: #17140d;
+  --admin-text-muted: #6b6355;
+  --admin-text-subtle: #9b9585;
+
+  --admin-sidebar-bg: #14110a;
+  --admin-sidebar-text: #a49c8a;
+  --admin-sidebar-text-active: #f5f5f5;
+  --admin-sidebar-active-bg: rgba(217, 165, 20, 0.16);
+  --admin-sidebar-border: #221d12;
+
+  --admin-accent: #b8860b;
+  --admin-accent-hover: #9c7209;
+  --admin-accent-soft: rgba(184, 134, 11, 0.12);
+
+  --admin-success: #16a34a;
+  --admin-success-soft: #dcfce7;
+  --admin-warning: #d97706;
+  --admin-warning-soft: #fef3c7;
+  --admin-danger: #dc2626;
+  --admin-danger-soft: #fee2e2;
+  --admin-info: #2563eb;
+  --admin-info-soft: #dbeafe;
+
+  --admin-shadow: 0 1px 2px rgba(23, 20, 13, 0.04), 0 8px 24px -8px rgba(23, 20, 13, 0.10);
+
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  color-scheme: light;
+}
+
+.admin-shell[data-theme="dark"] {
+  /* Daily Fade admin — dark luxury barbershop, gold accent (Phase 8 redesign) */
+  --admin-bg: #080b10;
+  --admin-bg-secondary: #0d1117;
+  --admin-surface: #11151d;
+  --admin-surface-alt: #151a23;
+  --admin-border: #202631;
+  --admin-text: #f5f5f5;
+  --admin-text-muted: #a1a7b3;
+  --admin-text-subtle: #6b7280;
+
+  --admin-sidebar-bg: #090c11;
+  --admin-sidebar-text: #8892a4;
+  --admin-sidebar-text-active: #f5f5f5;
+  --admin-sidebar-active-bg: rgba(217, 165, 20, 0.14);
+  --admin-sidebar-border: #1a2029;
+
+  --admin-accent: #d9a514;
+  --admin-accent-hover: #e5b52a;
+  --admin-accent-soft: rgba(217, 165, 20, 0.15);
+
+  --admin-success: #22c55e;
+  --admin-success-soft: rgba(34, 197, 94, 0.15);
+  --admin-warning: #f59e0b;
+  --admin-warning-soft: rgba(245, 158, 11, 0.15);
+  --admin-danger: #ef4444;
+  --admin-danger-soft: rgba(239, 68, 68, 0.15);
+  --admin-info: #3b82f6;
+  --admin-info-soft: rgba(59, 130, 246, 0.15);
+
+  --admin-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -8px rgba(0, 0, 0, 0.55);
+  color-scheme: dark;
+}

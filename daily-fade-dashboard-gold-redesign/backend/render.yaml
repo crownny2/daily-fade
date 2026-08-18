@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: daily-fade-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: APP_NAME
+        value: "Daily Fade"
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL
+        sync: false # set to your Render URL after first deploy, e.g. https://daily-fade-api.onrender.com
+      - key: APP_KEY
+        sync: false # paste output of `php artisan key:generate --show` run locally
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        sync: false # from Supabase: Project Settings > Database > Connection string
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_DATABASE
+        value: postgres
+      - key: DB_USERNAME
+        sync: false # Supabase db user
+      - key: DB_PASSWORD
+        sync: false # Supabase db password
+      - key: FRONTEND_URL
+        sync: false # your Vercel URL, e.g. https://daily-fade.vercel.app
