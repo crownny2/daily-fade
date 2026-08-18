@@ -182,7 +182,12 @@ class BookingService
     {
         $prefix = 'BRB-' . $date->format('Ymd') . '-';
 
-        $sequence = Appointment::whereDate('created_at', Carbon::today())->lockForUpdate()->count();
+        // PostgreSQL doesn't allow FOR UPDATE combined with aggregate functions
+        // (COUNT, SUM, etc.) since there are no individual rows to lock on an
+        // aggregate result. Fetch and lock the actual rows instead, then count
+        // them in PHP - still safe because this runs inside the same
+        // DB::transaction() as the rest of createAppointment().
+        $sequence = Appointment::whereDate('created_at', Carbon::today())->lockForUpdate()->get()->count();
 
         do {
             $sequence++;
