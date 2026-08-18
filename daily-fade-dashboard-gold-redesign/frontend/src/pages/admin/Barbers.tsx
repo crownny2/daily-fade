@@ -254,7 +254,7 @@ export function AdminBarbers() {
                   <tr key={barber.id} className="hover:bg-[var(--admin-surface-alt)]/60">
                     <td className="px-4 py-4">
                       <div className="flex items-center gap-3">
-                        <Avatar name={barber.name} />
+                        <Avatar name={barber.name ?? `${barber.first_name} ${barber.last_name}`} />
                         <span className="font-medium text-[var(--admin-text)]">{barber.name}</span>
                       </div>
                     </td>
@@ -407,7 +407,7 @@ export function AdminBarbers() {
         <Modal title="Barber Details" onClose={() => setViewing(null)}>
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <Avatar name={viewing.name} size="lg" />
+              <Avatar name={viewing.name ?? `${viewing.first_name} ${viewing.last_name}`} size="lg" />
               <div>
                 <p className="text-base font-semibold text-[var(--admin-text)]">{viewing.name}</p>
                 <p className="text-sm text-[var(--admin-text-muted)]">{viewing.specialty || 'No specialty set'}</p>

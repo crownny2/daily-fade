@@ -76,7 +76,6 @@ export function AdminReports() {
     setAppliedCustom({ start: startDate, end: endDate })
   }
 
-  const activeIndex = RANGE_OPTIONS.findIndex((o) => o.value === range)
 
   return (
     <div className="space-y-6">
@@ -112,7 +111,7 @@ export function AdminReports() {
         style={{ boxShadow: 'var(--admin-shadow)' }}
       >
         <div className="relative flex flex-wrap gap-1 rounded-lg bg-[var(--admin-surface-alt)] p-1">
-          {RANGE_OPTIONS.map((opt, i) => (
+          {RANGE_OPTIONS.map((opt) => (
             <button
               key={opt.value}
               type="button"

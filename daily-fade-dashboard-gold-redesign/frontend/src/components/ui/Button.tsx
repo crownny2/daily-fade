@@ -8,6 +8,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant
   size?: Size
   isLoading?: boolean
+  /** Optional text shown in place of children while isLoading is true. */
+  loadingText?: string
 }
 
 const variantClasses: Record<Variant, string> = {
@@ -24,7 +26,7 @@ const sizeClasses: Record<Size, string> = {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = 'primary', size = 'md', isLoading, className, disabled, children, ...props }, ref) => {
+  ({ variant = 'primary', size = 'md', isLoading, loadingText, className, disabled, children, ...props }, ref) => {
     return (
       <button
         ref={ref}
@@ -41,7 +43,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {isLoading && (
           <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
         )}
-        {children}
+        {isLoading && loadingText ? loadingText : children}
       </button>
     )
   }

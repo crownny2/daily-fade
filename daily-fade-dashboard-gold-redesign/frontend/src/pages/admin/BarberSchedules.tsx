@@ -137,7 +137,7 @@ export function AdminBarberSchedules() {
                     : 'text-[var(--admin-text)] hover:bg-[var(--admin-surface-alt)]'
                 )}
               >
-                <Avatar name={barber.name} size="sm" />
+                <Avatar name={barber.name ?? 'Barber'} size="sm" />
                 <span className="min-w-0 flex-1">
                   <span className="flex items-center justify-between gap-2">
                     <span className="truncate font-medium">{barber.name}</span>
@@ -171,7 +171,7 @@ export function AdminBarberSchedules() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Avatar name={selected.name} />
+                    <Avatar name={selected.name ?? 'Barber'} />
                     <h3 className="text-sm font-semibold text-[var(--admin-text)]">{selected.name}'s weekly schedule</h3>
                   </div>
                   <button
